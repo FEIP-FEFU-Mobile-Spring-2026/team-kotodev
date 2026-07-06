@@ -25,20 +25,22 @@ FEFU Store — мобильное приложение интернет-мага
 
 1. Склонировать репозиторий:
 
+```
 git clone https://github.com/FEIP-FEFU-Mobile-Spring-2026/team-kotodev.git
-cd team-vibe-mobile
+cd team-kotodev
+```
 
 2. Открыть проект в Android Studio.
 
-File → Open → выберите папку team-kotodev
-Дождитесь синхронизации Gradle
+* File → Open → выберите папку team-kotodev
+* Дождитесь синхронизации Gradle
 
 3. Сборка проекта
 
-Через IDE: Build → Make Project (Ctrl+F9)
-Через терминал: ./gradlew assembleDebug
+* Через IDE: Build → Make Project (Ctrl+F9)
+* Через терминал: ./gradlew assembleDebug
 
 4. Запуск приложения.
 
-Подключите устройство или запустите эмулятор
-Нажмите Run (зелёная стрелка) или Shift + F10
+* Подключите устройство или запустите эмулятор
+* Нажмите Run (зелёная стрелка) или Shift + F10
