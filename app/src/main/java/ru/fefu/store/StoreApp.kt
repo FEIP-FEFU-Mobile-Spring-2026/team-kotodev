@@ -1,89 +1,127 @@
 package ru.fefu.store
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import ru.fefu.store.ui.theme.FEFUStoreTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ru.fefu.store.data.repository.CatalogRepository
+import ru.fefu.store.ui.cart.CartPlaceholderScreen
+import ru.fefu.store.ui.catalog.CatalogScreen
+import ru.fefu.store.ui.catalog.CatalogViewModel
+import ru.fefu.store.ui.catalog.StoreColors
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StoreApp() {
+fun StoreApp(
+    catalogRepository: CatalogRepository
+) {
+    var selectedDestination by rememberSaveable {
+        mutableStateOf(StoreDestination.Catalog.route)
+    }
+
+    val catalogViewModel: CatalogViewModel = viewModel(
+        factory = CatalogViewModel.Factory(catalogRepository)
+    )
+
+    val catalogUiState by catalogViewModel.uiState.collectAsState()
+
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "FEFU Store")
+        bottomBar = {
+            StoreBottomNavigationBar(
+                selectedRoute = selectedDestination,
+                onDestinationClick = { route ->
+                    selectedDestination = route
                 }
             )
         }
     ) { innerPadding ->
-        StartScreen(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        )
-    }
-}
-
-@Composable
-fun StartScreen(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier.padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(
-                    text = "Интернет-магазин одежды",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
+        when (selectedDestination) {
+            StoreDestination.Catalog.route -> {
+                CatalogScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    uiState = catalogUiState,
+                    onCategoryClick = catalogViewModel::selectCategory,
+                    onRetryClick = catalogViewModel::loadCatalog
                 )
+            }
 
-                Text(
-                    text = "Мобильное приложение для просмотра каталога товаров, выбора размера, добавления товаров в корзину и оформления заказа.",
-                    style = MaterialTheme.typography.bodyMedium
+            StoreDestination.Cart.route -> {
+                CartPlaceholderScreen(
+                    modifier = Modifier.padding(innerPadding)
                 )
-
-                Button(
-                    onClick = { },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Каталог появится в следующем блоке")
-                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun StoreAppPreview() {
-    FEFUStoreTheme {
-        StoreApp()
+private fun StoreBottomNavigationBar(
+    selectedRoute: String,
+    onDestinationClick: (String) -> Unit
+) {
+    NavigationBar(
+        containerColor = androidx.compose.ui.graphics.Color.White
+    ) {
+        NavigationBarItem(
+            selected = selectedRoute == StoreDestination.Catalog.route,
+            onClick = {
+                onDestinationClick(StoreDestination.Catalog.route)
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Menu,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(text = "Меню")
+            },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = StoreColors.Accent,
+                selectedTextColor = StoreColors.Accent,
+                indicatorColor = StoreColors.AccentLight
+            )
+        )
+
+        NavigationBarItem(
+            selected = selectedRoute == StoreDestination.Cart.route,
+            onClick = {
+                onDestinationClick(StoreDestination.Cart.route)
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.ShoppingCart,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(text = "Корзина")
+            },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = StoreColors.Accent,
+                selectedTextColor = StoreColors.Accent,
+                indicatorColor = StoreColors.AccentLight
+            )
+        )
     }
+}
+
+private enum class StoreDestination(
+    val route: String
+) {
+    Catalog(route = "catalog"),
+    Cart(route = "cart")
 }
