@@ -9,8 +9,8 @@
     <string name="catalog_offline_banner">Нет сети.</string>
     <string name="retry">Повторить</string>
 
-    <string name="cart_empty_title">Корзина</string>
-    <string name="cart_empty_description">Корзина будет реализована в следующих блоках.</string>
+    <string name="cart_empty_title">Корзина пуста</string>
+    <string name="cart_empty_description">Добавьте товары из каталога, чтобы оформить заказ.</string>
 
     <string name="product_details_close">Закрыть</string>
     <string name="product_details_info">Информация о товаре</string>
