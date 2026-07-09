@@ -6,10 +6,7 @@ import ru.fefu.store.domain.model.Product
 
 object CatalogCategoryBuilder {
 
-    fun withNewCategoryIfNeeded(
-        categories: List<Category>,
-        products: List<Product>
-    ): List<Category> {
+    fun withNewCategoryIfNeeded(categories: List<Category>, products: List<Product>): List<Category> {
         val hasNewProducts = products.any { product ->
             product.tags.any { tag ->
                 tag.equals(CatalogConstants.NEW_TAG, ignoreCase = true)

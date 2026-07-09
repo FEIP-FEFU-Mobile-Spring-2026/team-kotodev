@@ -14,11 +14,7 @@ object CheckoutValidator {
         return emailRegex.matches(email.trim())
     }
 
-    fun isCheckoutAvailable(
-        name: String,
-        email: String,
-        hasItems: Boolean
-    ): Boolean {
+    fun isCheckoutAvailable(name: String, email: String, hasItems: Boolean): Boolean {
         return hasItems && isNameValid(name) && isEmailValid(email)
     }
 }

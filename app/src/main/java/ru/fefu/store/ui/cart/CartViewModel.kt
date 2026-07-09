@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.fefu.store.data.repository.CartRepository
+import ru.fefu.store.domain.checkout.CheckoutValidator
 import ru.fefu.store.domain.model.CartLineItem
 import ru.fefu.store.domain.model.Product
 import ru.fefu.store.domain.model.ProductSize
-import ru.fefu.store.domain.checkout.CheckoutValidator
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
@@ -166,5 +166,4 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
             cartRepository = cartRepository,
         ) as T
     }
-
 }

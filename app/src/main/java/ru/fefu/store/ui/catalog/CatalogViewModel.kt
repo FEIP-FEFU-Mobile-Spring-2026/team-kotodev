@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.fefu.store.data.repository.CatalogRefreshResult
 import ru.fefu.store.data.repository.CatalogRepository
+import ru.fefu.store.domain.catalog.CatalogFilters
 import ru.fefu.store.domain.model.Category
 import ru.fefu.store.domain.model.Product
-import ru.fefu.store.domain.catalog.CatalogFilters
 
 class CatalogViewModel(private val repository: CatalogRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
 

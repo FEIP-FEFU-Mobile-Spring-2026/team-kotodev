@@ -5,10 +5,7 @@ import ru.fefu.store.domain.model.Product
 
 object CatalogFilters {
 
-    fun filterProductsByCategory(
-        products: List<Product>,
-        categoryId: String
-    ): List<Product> {
+    fun filterProductsByCategory(products: List<Product>, categoryId: String): List<Product> {
         return when (categoryId) {
             CatalogConstants.NEW_CATEGORY_ID -> {
                 products.filter { product ->

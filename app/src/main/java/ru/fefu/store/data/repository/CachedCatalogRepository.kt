@@ -10,8 +10,8 @@ import ru.fefu.store.data.database.toDomain
 import ru.fefu.store.data.database.toEntity
 import ru.fefu.store.data.network.CatalogApiException
 import ru.fefu.store.data.network.NetworkCatalogDataSource
-import ru.fefu.store.domain.model.CatalogData
 import ru.fefu.store.domain.catalog.CatalogCategoryBuilder
+import ru.fefu.store.domain.model.CatalogData
 
 class CachedCatalogRepository(
     private val networkCatalogDataSource: NetworkCatalogDataSource,

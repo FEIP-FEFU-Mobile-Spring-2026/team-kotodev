@@ -6,10 +6,7 @@ import ru.fefu.store.domain.model.ProductSize
 
 object TestFixtures {
 
-    fun category(
-        id: String = "cat_outerwear",
-        name: String = "Верхняя одежда"
-    ): Category {
+    fun category(id: String = "cat_outerwear", name: String = "Верхняя одежда"): Category {
         return Category(
             id = id,
             name = name
@@ -41,10 +38,7 @@ object TestFixtures {
         )
     }
 
-    fun size(
-        id: String = "size_m",
-        name: String = "M"
-    ): ProductSize {
+    fun size(id: String = "size_m", name: String = "M"): ProductSize {
         return ProductSize(
             id = id,
             name = name
