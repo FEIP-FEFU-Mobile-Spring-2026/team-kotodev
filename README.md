@@ -45,7 +45,7 @@
 
 | Каталог | Детали товара | Корзина |
 |--------|---------------|---------|
-| ![Каталог](screenshots/catalog.png) | ![Детали товара](screenshots/product_details.png) | ![Корзина](screenshots/cart_filled.png) |
+| ![Каталог](screenshots/catalog.jpg) | ![Детали товара](screenshots/product_details.jpg) | ![Корзина](screenshots/cart.jpg) |
 
 | Корзина без заполненных данных | Успешное оформление заказа |
 |-------------------------------|-----------------------------|
