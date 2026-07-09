@@ -1,6 +1,8 @@
 package ru.fefu.store.data.local
 
 import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import ru.fefu.store.domain.model.CatalogData
 import ru.fefu.store.domain.model.Category
@@ -11,7 +13,7 @@ class AssetCatalogDataSource(
     private val context: Context
 ) {
 
-    fun loadCatalog(): CatalogData {
+    suspend fun loadCatalog(): CatalogData = withContext(Dispatchers.IO) {
         val json = context.assets
             .open(PRODUCTS_FILE_NAME)
             .bufferedReader()
@@ -22,7 +24,7 @@ class AssetCatalogDataSource(
         val categories = parseCategories(root)
         val products = parseProducts(root)
 
-        return CatalogData(
+        CatalogData(
             categories = categories,
             products = products
         )

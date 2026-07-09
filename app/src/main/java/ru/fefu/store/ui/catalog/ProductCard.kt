@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ru.fefu.store.domain.model.Product
 import ru.fefu.store.util.formatPrice
+import ru.fefu.store.ui.theme.StoreColors
 
 @Composable
 fun ProductCard(

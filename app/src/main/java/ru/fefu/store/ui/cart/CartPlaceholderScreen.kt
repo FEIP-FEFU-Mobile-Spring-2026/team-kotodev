@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.fefu.store.ui.catalog.StoreColors
+import ru.fefu.store.ui.theme.StoreColors
 
 @Composable
 fun CartPlaceholderScreen(

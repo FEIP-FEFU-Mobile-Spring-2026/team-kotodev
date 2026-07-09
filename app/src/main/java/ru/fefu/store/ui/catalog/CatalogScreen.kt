@@ -18,7 +18,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.fefu.store.domain.model.Category
 import ru.fefu.store.domain.model.Product
+import ru.fefu.store.ui.theme.StoreColors
 
 @Composable
 fun CatalogScreen(
@@ -194,14 +194,4 @@ private fun ErrorState(
             Text(text = "Повторить")
         }
     }
-}
-
-object StoreColors {
-    val Background = Color(0xFFF7F7F7)
-    val CardBackground = Color.White
-    val ChipBackground = Color(0xFFF2F2F2)
-    val Accent = Color(0xFF9A7463)
-    val AccentLight = Color(0xFFF1E8E3)
-    val TextPrimary = Color(0xFF222222)
-    val TextSecondary = Color(0xFF8C8C8C)
 }

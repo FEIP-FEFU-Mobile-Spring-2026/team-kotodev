@@ -2,7 +2,8 @@ package ru.fefu.store
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -22,7 +23,7 @@ import ru.fefu.store.data.repository.CatalogRepository
 import ru.fefu.store.ui.cart.CartPlaceholderScreen
 import ru.fefu.store.ui.catalog.CatalogScreen
 import ru.fefu.store.ui.catalog.CatalogViewModel
-import ru.fefu.store.ui.catalog.StoreColors
+import ru.fefu.store.ui.theme.StoreColors
 
 @Composable
 fun StoreApp(
@@ -82,12 +83,12 @@ private fun StoreBottomNavigationBar(
             },
             icon = {
                 Icon(
-                    imageVector = Icons.Outlined.Menu,
-                    contentDescription = null
+                    imageVector = Icons.AutoMirrored.Outlined.List,
+                    contentDescription = "Каталог"
                 )
             },
             label = {
-                Text(text = "Меню")
+                Text(text = "Каталог")
             },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = StoreColors.Accent,
@@ -104,7 +105,7 @@ private fun StoreBottomNavigationBar(
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.ShoppingCart,
-                    contentDescription = null
+                    contentDescription = "Корзина"
                 )
             },
             label = {

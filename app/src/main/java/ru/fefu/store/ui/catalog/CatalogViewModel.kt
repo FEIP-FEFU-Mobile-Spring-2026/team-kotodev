@@ -13,6 +13,7 @@ import ru.fefu.store.domain.model.Category
 import ru.fefu.store.domain.model.Product
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.createSavedStateHandle
+import ru.fefu.store.domain.CatalogConstants
 
 class CatalogViewModel(
     private val repository: CatalogRepository,
@@ -72,8 +73,8 @@ class CatalogViewModel(
 
     private fun showCategory(categoryId: String) {
         val filteredProducts = when (categoryId) {
-            NEW_CATEGORY_ID -> allProducts.filter { product ->
-                NEW_TAG in product.tags
+            CatalogConstants.NEW_CATEGORY_ID -> allProducts.filter { product ->
+                CatalogConstants.NEW_TAG in product.tags
             }
 
             else -> allProducts.filter { product ->
@@ -108,7 +109,5 @@ class CatalogViewModel(
 
     private companion object {
         const val KEY_SELECTED_CATEGORY_ID = "selected_category_id"
-        const val NEW_CATEGORY_ID = "cat_new"
-        const val NEW_TAG = "New"
     }
 }
