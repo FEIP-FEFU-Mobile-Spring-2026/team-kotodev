@@ -13,22 +13,25 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ru.fefu.store.R
 import ru.fefu.store.domain.model.Category
 import ru.fefu.store.domain.model.Product
 import ru.fefu.store.ui.theme.StoreColors
-import androidx.compose.ui.res.stringResource
-import ru.fefu.store.R
 
 @Composable
 fun CatalogScreen(
@@ -48,8 +51,10 @@ fun CatalogScreen(
                 LoadingState()
             }
 
-            CatalogUiState.Error -> {
+            is CatalogUiState.Error -> {
                 ErrorState(
+                    title = uiState.title,
+                    description = uiState.description,
                     onRetryClick = onRetryClick
                 )
             }
@@ -59,6 +64,8 @@ fun CatalogScreen(
                     categories = uiState.categories,
                     selectedCategoryId = uiState.selectedCategoryId,
                     products = uiState.products,
+                    isRefreshing = uiState.isRefreshing,
+                    isOffline = uiState.isOffline,
                     onCategoryClick = onCategoryClick,
                     onProductClick = onProductClick
                 )
@@ -72,12 +79,25 @@ private fun CatalogContent(
     categories: List<Category>,
     selectedCategoryId: String,
     products: List<Product>,
+    isRefreshing: Boolean,
+    isOffline: Boolean,
     onCategoryClick: (String) -> Unit,
     onProductClick: (Product) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        if (isOffline) {
+            OfflineBanner()
+        }
+
+        if (isRefreshing) {
+            LinearProgressIndicator(
+                modifier = Modifier.fillMaxWidth(),
+                color = StoreColors.Accent
+            )
+        }
+
         CategoryTabs(
             categories = categories,
             selectedCategoryId = selectedCategoryId,
@@ -105,6 +125,23 @@ private fun CatalogContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun OfflineBanner() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(StoreColors.AccentLight)
+            .padding(horizontal = 16.dp, vertical = 10.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.catalog_offline_banner),
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Medium,
+            color = StoreColors.Accent
+        )
     }
 }
 
@@ -166,6 +203,8 @@ private fun LoadingState() {
 
 @Composable
 private fun ErrorState(
+    title: String,
+    description: String,
     onRetryClick: () -> Unit
 ) {
     Column(
@@ -176,16 +215,18 @@ private fun ErrorState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.catalog_error_message),
+            text = title,
             style = MaterialTheme.typography.titleMedium,
-            color = StoreColors.TextPrimary
+            color = StoreColors.TextPrimary,
+            textAlign = TextAlign.Center
         )
 
         Text(
             modifier = Modifier.padding(top = 8.dp),
-            text = stringResource(R.string.catalog_error_description),
+            text = description,
             style = MaterialTheme.typography.bodyMedium,
-            color = StoreColors.TextSecondary
+            color = StoreColors.TextSecondary,
+            textAlign = TextAlign.Center
         )
 
         Button(

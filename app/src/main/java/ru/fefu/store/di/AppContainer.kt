@@ -1,8 +1,11 @@
 package ru.fefu.store.di
 
 import android.content.Context
-import ru.fefu.store.data.local.AssetCatalogDataSource
-import ru.fefu.store.data.repository.AssetCatalogRepository
+import androidx.room.Room
+import ru.fefu.store.data.connectivity.ConnectivityObserver
+import ru.fefu.store.data.database.StoreDatabase
+import ru.fefu.store.data.network.NetworkCatalogDataSource
+import ru.fefu.store.data.repository.CachedCatalogRepository
 import ru.fefu.store.data.repository.CatalogRepository
 
 interface AppContainer {
@@ -13,11 +16,29 @@ class DefaultAppContainer(
     private val context: Context
 ) : AppContainer {
 
+    private val database: StoreDatabase by lazy {
+        Room.databaseBuilder(
+            context.applicationContext,
+            StoreDatabase::class.java,
+            "store.db"
+        ).build()
+    }
+
+    private val networkCatalogDataSource: NetworkCatalogDataSource by lazy {
+        NetworkCatalogDataSource()
+    }
+
+    private val connectivityObserver: ConnectivityObserver by lazy {
+        ConnectivityObserver(
+            context = context.applicationContext
+        )
+    }
+
     override val catalogRepository: CatalogRepository by lazy {
-        AssetCatalogRepository(
-            assetCatalogDataSource = AssetCatalogDataSource(
-                context = context.applicationContext
-            )
+        CachedCatalogRepository(
+            networkCatalogDataSource = networkCatalogDataSource,
+            catalogDao = database.catalogDao(),
+            connectivityObserver = connectivityObserver
         )
     }
 }

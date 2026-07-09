@@ -3,17 +3,19 @@ package ru.fefu.store.ui.catalog
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.fefu.store.data.repository.CatalogRefreshResult
 import ru.fefu.store.data.repository.CatalogRepository
+import ru.fefu.store.domain.CatalogConstants
 import ru.fefu.store.domain.model.Category
 import ru.fefu.store.domain.model.Product
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.createSavedStateHandle
-import ru.fefu.store.domain.CatalogConstants
 
 class CatalogViewModel(
     private val repository: CatalogRepository,
@@ -26,40 +28,75 @@ class CatalogViewModel(
     private var allCategories: List<Category> = emptyList()
     private var allProducts: List<Product> = emptyList()
 
+    private var isRefreshing = false
+    private var isOffline = false
+    private var refreshJob: Job? = null
+
     init {
-        loadCatalog()
+        observeCatalogCache()
+        refreshCatalog()
     }
 
-    fun loadCatalog() {
-        _uiState.value = CatalogUiState.Loading
+    fun refreshCatalog() {
+        if (refreshJob?.isActive == true) {
+            return
+        }
 
-        viewModelScope.launch {
-            try {
-                val catalog = repository.getCatalog()
+        refreshJob = viewModelScope.launch {
+            val hasCache = repository.hasCachedCatalog()
 
-                allCategories = catalog.categories
-                allProducts = catalog.products
+            isRefreshing = true
 
-                val restoredCategoryId = savedStateHandle.get<String>(KEY_SELECTED_CATEGORY_ID)
+            if (hasCache && allProducts.isNotEmpty()) {
+                showSelectedCategory()
+            } else {
+                _uiState.value = CatalogUiState.Loading
+            }
 
-                val selectedCategoryId = when {
-                    restoredCategoryId != null && allCategories.any { it.id == restoredCategoryId } -> {
-                        restoredCategoryId
-                    }
+            when (repository.refreshCatalog()) {
+                CatalogRefreshResult.Success -> {
+                    isRefreshing = false
+                    isOffline = false
 
-                    allCategories.isNotEmpty() -> {
-                        allCategories.first().id
-                    }
-
-                    else -> {
-                        ""
+                    if (allProducts.isNotEmpty()) {
+                        showSelectedCategory()
                     }
                 }
 
-                savedStateHandle[KEY_SELECTED_CATEGORY_ID] = selectedCategoryId
-                showCategory(selectedCategoryId)
-            } catch (exception: Exception) {
-                _uiState.value = CatalogUiState.Error
+                CatalogRefreshResult.NoInternet -> {
+                    isRefreshing = false
+                    isOffline = true
+
+                    val hasCatalogToShow = repository.hasCachedCatalog() || allProducts.isNotEmpty()
+
+                    if (hasCatalogToShow) {
+                        if (allProducts.isNotEmpty()) {
+                            showSelectedCategory()
+                        }
+                    } else {
+                        _uiState.value = CatalogUiState.Error(
+                            title = "Нет сети",
+                            description = "Каталог пока не сохранён на устройстве. Подключитесь к интернету и попробуйте снова."
+                        )
+                    }
+                }
+
+                is CatalogRefreshResult.Error -> {
+                    isRefreshing = false
+
+                    val hasCatalogToShow = repository.hasCachedCatalog() || allProducts.isNotEmpty()
+
+                    if (hasCatalogToShow) {
+                        if (allProducts.isNotEmpty()) {
+                            showSelectedCategory()
+                        }
+                    } else {
+                        _uiState.value = CatalogUiState.Error(
+                            title = "Не удалось загрузить каталог",
+                            description = "Проверьте подключение к интернету и попробуйте снова."
+                        )
+                    }
+                }
             }
         }
     }
@@ -69,10 +106,55 @@ class CatalogViewModel(
         showCategory(categoryId)
     }
 
+    private fun observeCatalogCache() {
+        viewModelScope.launch {
+            repository.observeCatalog().collect { catalog ->
+                allCategories = catalog.categories
+                allProducts = catalog.products
+
+                if (allProducts.isNotEmpty()) {
+                    val selectedCategoryId = getValidSelectedCategoryId()
+                    savedStateHandle[KEY_SELECTED_CATEGORY_ID] = selectedCategoryId
+                    showCategory(selectedCategoryId)
+                }
+            }
+        }
+    }
+
+    private fun showSelectedCategory() {
+        if (allProducts.isEmpty()) {
+            return
+        }
+
+        val selectedCategoryId = getValidSelectedCategoryId()
+        savedStateHandle[KEY_SELECTED_CATEGORY_ID] = selectedCategoryId
+        showCategory(selectedCategoryId)
+    }
+
+    private fun getValidSelectedCategoryId(): String {
+        val restoredCategoryId = savedStateHandle.get<String>(KEY_SELECTED_CATEGORY_ID)
+
+        return when {
+            restoredCategoryId != null && allCategories.any { category -> category.id == restoredCategoryId } -> {
+                restoredCategoryId
+            }
+
+            allCategories.isNotEmpty() -> {
+                allCategories.first().id
+            }
+
+            else -> {
+                ""
+            }
+        }
+    }
+
     private fun showCategory(categoryId: String) {
         val filteredProducts = when (categoryId) {
             CatalogConstants.NEW_CATEGORY_ID -> allProducts.filter { product ->
-                CatalogConstants.NEW_TAG in product.tags
+                product.tags.any { tag ->
+                    tag.equals(CatalogConstants.NEW_TAG, ignoreCase = true)
+                }
             }
 
             else -> allProducts.filter { product ->
@@ -83,7 +165,9 @@ class CatalogViewModel(
         _uiState.value = CatalogUiState.Content(
             categories = allCategories,
             selectedCategoryId = categoryId,
-            products = filteredProducts
+            products = filteredProducts,
+            isRefreshing = isRefreshing,
+            isOffline = isOffline
         )
     }
 

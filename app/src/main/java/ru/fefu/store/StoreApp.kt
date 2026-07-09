@@ -72,7 +72,7 @@ fun StoreApp(
                     onProductClick = { product ->
                         selectedProduct = product
                     },
-                    onRetryClick = catalogViewModel::loadCatalog
+                    onRetryClick = catalogViewModel::refreshCatalog
                 )
             }
 
