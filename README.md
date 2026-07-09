@@ -6,21 +6,6 @@
 
 ---
 
-## Содержание
-
-- [О проекте](#о-проекте)
-- [Скриншоты](#скриншоты)
-- [Реализованный функционал](#реализованный-функционал)
-- [Архитектура](#архитектура)
-- [Стек технологий](#стек-технологий)
-- [Структура проекта](#структура-проекта)
-- [Сборка и запуск](#сборка-и-запуск)
-- [Линтер](#линтер)
-- [Тесты](#тесты)
-- [Проверка перед сдачей](#проверка-перед-сдачей)
-
----
-
 ## О проекте
 
 **FEFU Store** — учебное Android-приложение интернет-магазина одежды.
@@ -41,15 +26,10 @@
 
 ## Скриншоты
 
-> Скриншоты должны лежать в папке `screenshots` в корне проекта.
 
 | Каталог | Детали товара | Корзина |
 |--------|---------------|---------|
 | ![Каталог](screenshots/catalog.jpg) | ![Детали товара](screenshots/product_details.jpg) | ![Корзина](screenshots/cart.jpg) |
-
-| Корзина без заполненных данных | Успешное оформление заказа |
-|-------------------------------|-----------------------------|
-| ![Корзина без заполненных данных](screenshots/cart_empty_fields.png) | ![Успешное оформление заказа](screenshots/order_success.png) |
 
 ---
 
@@ -193,22 +173,6 @@ flowchart TD
 | `di` | Ручное создание зависимостей приложения |
 | `util` | Утилитарные функции, например форматирование цены |
 
-### Основные компоненты
-
-| Компонент | Ответственность |
-|----------|-----------------|
-| `CatalogScreen` | Отображение каталога товаров |
-| `ProductDetailsBottomSheet` | Отображение подробной информации о товаре |
-| `CartScreen` | Отображение корзины и оформление заказа |
-| `CatalogViewModel` | Управление состоянием каталога |
-| `CartViewModel` | Управление состоянием корзины и формы заказа |
-| `CatalogRepository` | Получение и обновление каталога |
-| `CartRepository` | Работа с локальной корзиной |
-| `NetworkCatalogDataSource` | Загрузка каталога из API |
-| `StoreDatabase` | Room-база данных приложения |
-| `CatalogDao` | Работа с кэшем каталога |
-| `CartDao` | Работа с сохранёнными позициями корзины |
-
 ---
 
 ## Стек технологий
@@ -227,84 +191,6 @@ flowchart TD
 | DI | Ручной dependency injection через `AppContainer` |
 | Линтер | ktlint |
 | Unit-тесты | JUnit |
-
----
-
-## Структура проекта
-
-```text
-app/src/main/java/ru/fefu/store
-├── data
-│   ├── connectivity
-│   │   └── ConnectivityObserver.kt
-│   ├── database
-│   │   ├── CartDao.kt
-│   │   ├── CartItemEntity.kt
-│   │   ├── CatalogDao.kt
-│   │   ├── CategoryEntity.kt
-│   │   ├── ProductEntity.kt
-│   │   └── StoreDatabase.kt
-│   ├── network
-│   │   ├── CatalogApiException.kt
-│   │   └── NetworkCatalogDataSource.kt
-│   └── repository
-│       ├── CachedCatalogRepository.kt
-│       ├── CartRepository.kt
-│       ├── CatalogRepository.kt
-│       ├── CatalogRefreshResult.kt
-│       └── RoomCartRepository.kt
-├── di
-│   └── AppContainer.kt
-├── domain
-│   ├── catalog
-│   │   ├── CatalogCategoryBuilder.kt
-│   │   └── CatalogFilters.kt
-│   ├── checkout
-│   │   └── CheckoutValidator.kt
-│   └── model
-│       ├── CartData.kt
-│       ├── CartLineItem.kt
-│       ├── CatalogData.kt
-│       ├── Category.kt
-│       ├── Product.kt
-│       └── ProductSize.kt
-├── ui
-│   ├── cart
-│   │   ├── CartScreen.kt
-│   │   ├── CartUiState.kt
-│   │   └── CartViewModel.kt
-│   ├── catalog
-│   │   ├── CatalogScreen.kt
-│   │   ├── CatalogUiState.kt
-│   │   └── CatalogViewModel.kt
-│   ├── product
-│   │   ├── ProductDetailsBottomSheet.kt
-│   │   └── ProductInfoDialog.kt
-│   └── theme
-├── util
-│   └── PriceFormatter.kt
-├── MainActivity.kt
-├── StoreApp.kt
-└── StoreApplication.kt
-```
-
-Тесты расположены в:
-
-```text
-app/src/test/java/ru/fefu/store
-├── TestFixtures.kt
-├── data
-│   └── database
-│       └── ProductEntityMappingTest.kt
-└── domain
-    ├── catalog
-    │   ├── CatalogCategoryBuilderTest.kt
-    │   └── CatalogFiltersTest.kt
-    ├── checkout
-    │   └── CheckoutValidatorTest.kt
-    └── model
-        └── CartDataTest.kt
-```
 
 ---
 
@@ -382,26 +268,6 @@ macOS/Linux:
 ./gradlew ktlintFormat
 ```
 
----
-
-## Тесты
-
-В проекте добавлены unit-тесты на бизнес-логику.
-
-Проверяются:
-
-- расчёт общего количества товаров в корзине;
-- расчёт общей стоимости корзины;
-- расчёт стоимости позиции корзины;
-- валидация имени;
-- валидация email;
-- доступность оформления заказа;
-- фильтрация товаров по категории;
-- фильтрация товаров для категории «Новинки»;
-- добавление категории «Новинки» при наличии новых товаров;
-- отсутствие дублирования категории «Новинки»;
-- маппинг `Product` → `ProductEntity` → `Product`.
-
 ### Запуск unit-тестов
 
 Windows:
@@ -416,65 +282,6 @@ macOS/Linux:
 ./gradlew testDebugUnitTest
 ```
 
----
-
-## Проверка перед сдачей
-
-Перед созданием pull request рекомендуется выполнить:
-
-Windows:
-
-```bash
-gradlew.bat ktlintCheck
-gradlew.bat testDebugUnitTest
-gradlew.bat assembleDebug
-```
-
-macOS/Linux:
-
-```bash
-./gradlew ktlintCheck
-./gradlew testDebugUnitTest
-./gradlew assembleDebug
-```
-
-Ожидаемый результат:
-
-```text
-BUILD SUCCESSFUL
-```
-
----
-
-## Git workflow
-
-Рекомендуемые команды для финального блока:
-
-```bash
-git checkout -b hw6-quality-docs
-```
-
-```bash
-git add .
-git commit -m "build: configure ktlint"
-```
-
-```bash
-git add .
-git commit -m "test: add unit tests for business logic"
-```
-
-```bash
-git add README.md screenshots
-git commit -m "docs: update readme with screenshots and architecture"
-```
-
-```bash
-git push origin hw6-quality-docs
-```
-
----
-
 ## Статус проекта
 
 Проект доведён до финального состояния:
@@ -488,4 +295,3 @@ git push origin hw6-quality-docs
 - добавлены unit-тесты;
 - настроен ktlint;
 - оформлен README;
-- проект готов к проверке блока 6.
