@@ -34,6 +34,7 @@ import ru.fefu.store.R
 fun CatalogScreen(
     uiState: CatalogUiState,
     onCategoryClick: (String) -> Unit,
+    onProductClick: (Product) -> Unit,
     onRetryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -58,7 +59,8 @@ fun CatalogScreen(
                     categories = uiState.categories,
                     selectedCategoryId = uiState.selectedCategoryId,
                     products = uiState.products,
-                    onCategoryClick = onCategoryClick
+                    onCategoryClick = onCategoryClick,
+                    onProductClick = onProductClick
                 )
             }
         }
@@ -70,7 +72,8 @@ private fun CatalogContent(
     categories: List<Category>,
     selectedCategoryId: String,
     products: List<Product>,
-    onCategoryClick: (String) -> Unit
+    onCategoryClick: (String) -> Unit,
+    onProductClick: (Product) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -97,6 +100,7 @@ private fun CatalogContent(
             ) { product ->
                 ProductCard(
                     product = product,
+                    onClick = onProductClick,
                     modifier = Modifier.fillMaxWidth()
                 )
             }

@@ -10,4 +10,17 @@
 
     <string name="cart_empty_title">Корзина</string>
     <string name="cart_empty_description">Корзина будет реализована в следующих блоках.</string>
+
+    <string name="product_details_close">Закрыть</string>
+    <string name="product_details_info">Информация о товаре</string>
+    <string name="product_details_size">Размер</string>
+    <string name="product_details_add_to_cart">В корзину</string>
+    <string name="product_details_add_to_cart_with_price">В корзину · %1$s</string>
+
+    <string name="product_info_title">Характеристики</string>
+    <string name="product_info_material">Материал</string>
+    <string name="product_info_weight">Вес</string>
+    <string name="product_info_season">Сезон</string>
+    <string name="product_info_country">Страна производства</string>
+    <string name="product_info_close">Закрыть</string>
 </resources>

@@ -22,4 +22,10 @@ object StoreColors {
 
     val TextPrimary = Color(0xFF222222)
     val TextSecondary = Color(0xFF8C8C8C)
+
+    val SheetBackground = Color.White
+    val ImagePlaceholder = Color(0xFFEFEFEF)
+    val TagBackground = Color(0xE6FFFFFF)
+    val SizeBorder = Color(0xFFE1E1E1)
+    val Divider = Color(0xFFE8E8E8)
 }
