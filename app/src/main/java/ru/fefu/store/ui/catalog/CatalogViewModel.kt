@@ -59,9 +59,7 @@ class CatalogViewModel(
                 savedStateHandle[KEY_SELECTED_CATEGORY_ID] = selectedCategoryId
                 showCategory(selectedCategoryId)
             } catch (exception: Exception) {
-                _uiState.value = CatalogUiState.Error(
-                    message = "Не удалось загрузить каталог"
-                )
+                _uiState.value = CatalogUiState.Error
             }
         }
     }

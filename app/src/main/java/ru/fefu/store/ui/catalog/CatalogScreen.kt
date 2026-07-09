@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import ru.fefu.store.domain.model.Category
 import ru.fefu.store.domain.model.Product
 import ru.fefu.store.ui.theme.StoreColors
+import androidx.compose.ui.res.stringResource
+import ru.fefu.store.R
 
 @Composable
 fun CatalogScreen(
@@ -45,9 +47,8 @@ fun CatalogScreen(
                 LoadingState()
             }
 
-            is CatalogUiState.Error -> {
+            CatalogUiState.Error -> {
                 ErrorState(
-                    message = uiState.message,
                     onRetryClick = onRetryClick
                 )
             }
@@ -161,7 +162,6 @@ private fun LoadingState() {
 
 @Composable
 private fun ErrorState(
-    message: String,
     onRetryClick: () -> Unit
 ) {
     Column(
@@ -172,14 +172,14 @@ private fun ErrorState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = message,
+            text = stringResource(R.string.catalog_error_message),
             style = MaterialTheme.typography.titleMedium,
             color = StoreColors.TextPrimary
         )
 
         Text(
             modifier = Modifier.padding(top = 8.dp),
-            text = "Проверьте файл products.json и попробуйте снова.",
+            text = stringResource(R.string.catalog_error_description),
             style = MaterialTheme.typography.bodyMedium,
             color = StoreColors.TextSecondary
         )
@@ -191,7 +191,7 @@ private fun ErrorState(
                 containerColor = StoreColors.Accent
             )
         ) {
-            Text(text = "Повторить")
+            Text(text = stringResource(R.string.retry))
         }
     }
 }

@@ -3,7 +3,6 @@ package ru.fefu.store
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
-import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -24,6 +23,7 @@ import ru.fefu.store.ui.cart.CartPlaceholderScreen
 import ru.fefu.store.ui.catalog.CatalogScreen
 import ru.fefu.store.ui.catalog.CatalogViewModel
 import ru.fefu.store.ui.theme.StoreColors
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun StoreApp(
@@ -73,8 +73,17 @@ private fun StoreBottomNavigationBar(
     selectedRoute: String,
     onDestinationClick: (String) -> Unit
 ) {
+    val navigationItemColors = NavigationBarItemDefaults.colors(
+        selectedIconColor = StoreColors.Accent,
+        selectedTextColor = StoreColors.Accent,
+        indicatorColor = StoreColors.AccentLight
+    )
+
+    val catalogLabel = stringResource(R.string.nav_catalog)
+    val cartLabel = stringResource(R.string.nav_cart)
+
     NavigationBar(
-        containerColor = androidx.compose.ui.graphics.Color.White
+        containerColor = StoreColors.BottomNavigationBackground
     ) {
         NavigationBarItem(
             selected = selectedRoute == StoreDestination.Catalog.route,
@@ -84,17 +93,13 @@ private fun StoreBottomNavigationBar(
             icon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.List,
-                    contentDescription = "Каталог"
+                    contentDescription = catalogLabel
                 )
             },
             label = {
-                Text(text = "Каталог")
+                Text(text = catalogLabel)
             },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = StoreColors.Accent,
-                selectedTextColor = StoreColors.Accent,
-                indicatorColor = StoreColors.AccentLight
-            )
+            colors = navigationItemColors
         )
 
         NavigationBarItem(
@@ -105,17 +110,13 @@ private fun StoreBottomNavigationBar(
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.ShoppingCart,
-                    contentDescription = "Корзина"
+                    contentDescription = cartLabel
                 )
             },
             label = {
-                Text(text = "Корзина")
+                Text(text = cartLabel)
             },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = StoreColors.Accent,
-                selectedTextColor = StoreColors.Accent,
-                indicatorColor = StoreColors.AccentLight
-            )
+            colors = navigationItemColors
         )
     }
 }

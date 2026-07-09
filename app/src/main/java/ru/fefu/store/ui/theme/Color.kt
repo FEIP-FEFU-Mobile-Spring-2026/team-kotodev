@@ -15,6 +15,8 @@ object StoreColors {
     val CardBackground = Color.White
     val ChipBackground = Color(0xFFF2F2F2)
 
+    val BottomNavigationBackground = Color.White
+
     val Accent = Color(0xFF9A7463)
     val AccentLight = Color(0xFFF1E8E3)
 

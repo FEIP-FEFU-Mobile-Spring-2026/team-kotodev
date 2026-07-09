@@ -12,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.fefu.store.ui.theme.StoreColors
+import androidx.compose.ui.res.stringResource
+import ru.fefu.store.R
 
 @Composable
 fun CartPlaceholderScreen(
@@ -26,14 +28,14 @@ fun CartPlaceholderScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Корзина",
+            text = stringResource(R.string.cart_empty_title),
             style = MaterialTheme.typography.titleLarge,
             color = StoreColors.TextPrimary
         )
 
         Text(
             modifier = Modifier.padding(top = 8.dp),
-            text = "Корзина будет реализована в следующих блоках.",
+            text = stringResource(R.string.cart_empty_description),
             style = MaterialTheme.typography.bodyMedium,
             color = StoreColors.TextSecondary
         )

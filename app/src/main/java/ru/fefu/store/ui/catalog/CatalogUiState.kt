@@ -7,9 +7,7 @@ sealed interface CatalogUiState {
 
     data object Loading : CatalogUiState
 
-    data class Error(
-        val message: String
-    ) : CatalogUiState
+    data object Error : CatalogUiState
 
     data class Content(
         val categories: List<Category>,
