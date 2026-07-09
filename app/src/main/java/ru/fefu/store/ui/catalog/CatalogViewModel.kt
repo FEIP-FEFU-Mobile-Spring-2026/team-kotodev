@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.fefu.store.data.repository.CatalogRefreshResult
 import ru.fefu.store.data.repository.CatalogRepository
-import ru.fefu.store.domain.CatalogConstants
 import ru.fefu.store.domain.model.Category
 import ru.fefu.store.domain.model.Product
+import ru.fefu.store.domain.catalog.CatalogFilters
 
 class CatalogViewModel(private val repository: CatalogRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
@@ -147,24 +147,17 @@ class CatalogViewModel(private val repository: CatalogRepository, private val sa
     }
 
     private fun showCategory(categoryId: String) {
-        val filteredProducts = when (categoryId) {
-            CatalogConstants.NEW_CATEGORY_ID -> allProducts.filter { product ->
-                product.tags.any { tag ->
-                    tag.equals(CatalogConstants.NEW_TAG, ignoreCase = true)
-                }
-            }
-
-            else -> allProducts.filter { product ->
-                product.categoryId == categoryId
-            }
-        }
+        val filteredProducts = CatalogFilters.filterProductsByCategory(
+            products = allProducts,
+            categoryId = categoryId
+        )
 
         _uiState.value = CatalogUiState.Content(
             categories = allCategories,
             selectedCategoryId = categoryId,
             products = filteredProducts,
             isRefreshing = isRefreshing,
-            isOffline = isOffline,
+            isOffline = isOffline
         )
     }
 

@@ -12,6 +12,7 @@ import ru.fefu.store.data.repository.CartRepository
 import ru.fefu.store.domain.model.CartLineItem
 import ru.fefu.store.domain.model.Product
 import ru.fefu.store.domain.model.ProductSize
+import ru.fefu.store.domain.checkout.CheckoutValidator
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
@@ -149,11 +150,12 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     private fun CartUiState.withValidation(): CartUiState {
-        val isNameValid = customerName.trim().isNotEmpty()
-        val isEmailValid = EMAIL_REGEX.matches(customerEmail.trim())
-
         return copy(
-            isCheckoutAvailable = items.isNotEmpty() && isNameValid && isEmailValid,
+            isCheckoutAvailable = CheckoutValidator.isCheckoutAvailable(
+                name = customerName,
+                email = customerEmail,
+                hasItems = items.isNotEmpty()
+            )
         )
     }
 
@@ -165,9 +167,4 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         ) as T
     }
 
-    private companion object {
-        val EMAIL_REGEX = Regex(
-            pattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
-        )
-    }
 }
