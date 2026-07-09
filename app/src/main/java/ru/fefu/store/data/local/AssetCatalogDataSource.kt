@@ -9,9 +9,7 @@ import ru.fefu.store.domain.model.Category
 import ru.fefu.store.domain.model.Product
 import ru.fefu.store.domain.model.ProductSize
 
-class AssetCatalogDataSource(
-    private val context: Context
-) {
+class AssetCatalogDataSource(private val context: Context) {
 
     suspend fun loadCatalog(): CatalogData = withContext(Dispatchers.IO) {
         val json = context.assets
@@ -26,7 +24,7 @@ class AssetCatalogDataSource(
 
         CatalogData(
             categories = categories,
-            products = products
+            products = products,
         )
     }
 
@@ -40,8 +38,8 @@ class AssetCatalogDataSource(
                 add(
                     Category(
                         id = categoryObject.getString("id"),
-                        name = categoryObject.getString("name")
-                    )
+                        name = categoryObject.getString("name"),
+                    ),
                 )
             }
         }
@@ -69,8 +67,8 @@ class AssetCatalogDataSource(
                         add(
                             ProductSize(
                                 id = sizeObject.getString("id"),
-                                name = sizeObject.getString("name")
-                            )
+                                name = sizeObject.getString("name"),
+                            ),
                         )
                     }
                 }
@@ -89,8 +87,8 @@ class AssetCatalogDataSource(
                         material = itemObject.getString("material"),
                         weight = itemObject.getString("weight"),
                         season = itemObject.getString("season"),
-                        countryOfOrigin = itemObject.getString("countryOfOrigin")
-                    )
+                        countryOfOrigin = itemObject.getString("countryOfOrigin"),
+                    ),
                 )
             }
         }

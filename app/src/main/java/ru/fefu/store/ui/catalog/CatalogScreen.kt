@@ -39,12 +39,12 @@ fun CatalogScreen(
     onCategoryClick: (String) -> Unit,
     onProductClick: (Product) -> Unit,
     onRetryClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(StoreColors.Background)
+            .background(StoreColors.Background),
     ) {
         when (uiState) {
             CatalogUiState.Loading -> {
@@ -55,7 +55,7 @@ fun CatalogScreen(
                 ErrorState(
                     title = uiState.title,
                     description = uiState.description,
-                    onRetryClick = onRetryClick
+                    onRetryClick = onRetryClick,
                 )
             }
 
@@ -67,7 +67,7 @@ fun CatalogScreen(
                     isRefreshing = uiState.isRefreshing,
                     isOffline = uiState.isOffline,
                     onCategoryClick = onCategoryClick,
-                    onProductClick = onProductClick
+                    onProductClick = onProductClick,
                 )
             }
         }
@@ -82,10 +82,10 @@ private fun CatalogContent(
     isRefreshing: Boolean,
     isOffline: Boolean,
     onCategoryClick: (String) -> Unit,
-    onProductClick: (Product) -> Unit
+    onProductClick: (Product) -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         if (isOffline) {
             OfflineBanner()
@@ -94,14 +94,14 @@ private fun CatalogContent(
         if (isRefreshing) {
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
-                color = StoreColors.Accent
+                color = StoreColors.Accent,
             )
         }
 
         CategoryTabs(
             categories = categories,
             selectedCategoryId = selectedCategoryId,
-            onCategoryClick = onCategoryClick
+            onCategoryClick = onCategoryClick,
         )
 
         LazyColumn(
@@ -110,18 +110,18 @@ private fun CatalogContent(
                 start = 16.dp,
                 top = 12.dp,
                 end = 16.dp,
-                bottom = 16.dp
+                bottom = 16.dp,
             ),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             items(
                 items = products,
-                key = { product -> product.id }
+                key = { product -> product.id },
             ) { product ->
                 ProductCard(
                     product = product,
                     onClick = onProductClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -134,34 +134,30 @@ private fun OfflineBanner() {
         modifier = Modifier
             .fillMaxWidth()
             .background(StoreColors.AccentLight)
-            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .padding(horizontal = 16.dp, vertical = 10.dp),
     ) {
         Text(
             text = stringResource(R.string.catalog_offline_banner),
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Medium,
-            color = StoreColors.Accent
+            color = StoreColors.Accent,
         )
     }
 }
 
 @Composable
-private fun CategoryTabs(
-    categories: List<Category>,
-    selectedCategoryId: String,
-    onCategoryClick: (String) -> Unit
-) {
+private fun CategoryTabs(categories: List<Category>, selectedCategoryId: String, onCategoryClick: (String) -> Unit) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
             .padding(vertical = 10.dp),
         contentPadding = PaddingValues(horizontal = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(
             items = categories,
-            key = { category -> category.id }
+            key = { category -> category.id },
         ) { category ->
             val selected = category.id == selectedCategoryId
 
@@ -173,7 +169,7 @@ private fun CategoryTabs(
                 label = {
                     Text(
                         text = category.name,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 },
                 shape = RoundedCornerShape(50),
@@ -182,8 +178,8 @@ private fun CategoryTabs(
                     containerColor = StoreColors.ChipBackground,
                     labelColor = StoreColors.TextPrimary,
                     selectedContainerColor = StoreColors.Accent,
-                    selectedLabelColor = Color.White
-                )
+                    selectedLabelColor = Color.White,
+                ),
             )
         }
     }
@@ -193,32 +189,28 @@ private fun CategoryTabs(
 private fun LoadingState() {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(
-            color = StoreColors.Accent
+            color = StoreColors.Accent,
         )
     }
 }
 
 @Composable
-private fun ErrorState(
-    title: String,
-    description: String,
-    onRetryClick: () -> Unit
-) {
+private fun ErrorState(title: String, description: String, onRetryClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             color = StoreColors.TextPrimary,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         Text(
@@ -226,15 +218,15 @@ private fun ErrorState(
             text = description,
             style = MaterialTheme.typography.bodyMedium,
             color = StoreColors.TextSecondary,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         Button(
             modifier = Modifier.padding(top = 20.dp),
             onClick = onRetryClick,
             colors = ButtonDefaults.buttonColors(
-                containerColor = StoreColors.Accent
-            )
+                containerColor = StoreColors.Accent,
+            ),
         ) {
             Text(text = stringResource(R.string.retry))
         }

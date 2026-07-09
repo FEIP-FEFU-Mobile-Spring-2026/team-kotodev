@@ -32,10 +32,7 @@ abstract class CatalogDao {
     protected abstract suspend fun clearProducts()
 
     @Transaction
-    open suspend fun replaceCatalog(
-        categories: List<CategoryEntity>,
-        products: List<ProductEntity>
-    ) {
+    open suspend fun replaceCatalog(categories: List<CategoryEntity>, products: List<ProductEntity>) {
         clearProducts()
         clearCategories()
         insertCategories(categories)

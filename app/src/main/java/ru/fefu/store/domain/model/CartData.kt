@@ -1,8 +1,6 @@
 package ru.fefu.store.domain.model
 
-data class CartData(
-    val items: List<CartLineItem>
-) {
+data class CartData(val items: List<CartLineItem>) {
     val totalPriceInKopecks: Long
         get() = items.sumOf { item -> item.totalPriceInKopecks }
 

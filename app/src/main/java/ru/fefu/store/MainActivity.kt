@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
             FEFUStoreTheme {
                 StoreApp(
                     catalogRepository = appContainer.catalogRepository,
-                    cartRepository = appContainer.cartRepository
+                    cartRepository = appContainer.cartRepository,
                 )
             }
         }

@@ -7,10 +7,10 @@ import androidx.room.RoomDatabase
     entities = [
         CategoryEntity::class,
         ProductEntity::class,
-        CartItemEntity::class
+        CartItemEntity::class,
     ],
     version = 2,
-    exportSchema = false
+    exportSchema = false,
 )
 abstract class StoreDatabase : RoomDatabase() {
 

@@ -21,12 +21,9 @@ abstract class CartDao {
         SELECT * FROM cart_items 
         WHERE productId = :productId AND sizeId = :sizeId 
         LIMIT 1
-        """
+        """,
     )
-    protected abstract suspend fun getCartItem(
-        productId: String,
-        sizeId: String
-    ): CartItemEntity?
+    protected abstract suspend fun getCartItem(productId: String, sizeId: String): CartItemEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     protected abstract suspend fun upsertCartItem(cartItem: CartItemEntity)
@@ -35,24 +32,18 @@ abstract class CartDao {
         """
         DELETE FROM cart_items 
         WHERE productId = :productId AND sizeId = :sizeId
-        """
+        """,
     )
-    abstract suspend fun removeCartItem(
-        productId: String,
-        sizeId: String
-    )
+    abstract suspend fun removeCartItem(productId: String, sizeId: String)
 
     @Query("DELETE FROM cart_items")
     abstract suspend fun clearCart()
 
     @Transaction
-    open suspend fun addOrIncrease(
-        productId: String,
-        sizeId: String
-    ) {
+    open suspend fun addOrIncrease(productId: String, sizeId: String) {
         val existingItem = getCartItem(
             productId = productId,
-            sizeId = sizeId
+            sizeId = sizeId,
         )
 
         if (existingItem == null) {
@@ -60,27 +51,23 @@ abstract class CartDao {
                 CartItemEntity(
                     productId = productId,
                     sizeId = sizeId,
-                    quantity = 1
-                )
+                    quantity = 1,
+                ),
             )
         } else {
             upsertCartItem(
                 existingItem.copy(
-                    quantity = existingItem.quantity + 1
-                )
+                    quantity = existingItem.quantity + 1,
+                ),
             )
         }
     }
 
     @Transaction
-    open suspend fun changeQuantity(
-        productId: String,
-        sizeId: String,
-        delta: Int
-    ) {
+    open suspend fun changeQuantity(productId: String, sizeId: String, delta: Int) {
         val existingItem = getCartItem(
             productId = productId,
-            sizeId = sizeId
+            sizeId = sizeId,
         ) ?: return
 
         val newQuantity = existingItem.quantity + delta
@@ -88,13 +75,13 @@ abstract class CartDao {
         if (newQuantity <= 0) {
             removeCartItem(
                 productId = productId,
-                sizeId = sizeId
+                sizeId = sizeId,
             )
         } else {
             upsertCartItem(
                 existingItem.copy(
-                    quantity = newQuantity
-                )
+                    quantity = newQuantity,
+                ),
             )
         }
     }

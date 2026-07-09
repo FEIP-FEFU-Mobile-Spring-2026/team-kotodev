@@ -18,28 +18,26 @@ import ru.fefu.store.domain.model.Product
 class CachedCatalogRepository(
     private val networkCatalogDataSource: NetworkCatalogDataSource,
     private val catalogDao: CatalogDao,
-    private val connectivityObserver: ConnectivityObserver
+    private val connectivityObserver: ConnectivityObserver,
 ) : CatalogRepository {
 
-    override fun observeCatalog(): Flow<CatalogData> {
-        return combine(
-            catalogDao.observeCategories(),
-            catalogDao.observeProducts()
-        ) { categoryEntities, productEntities ->
-            val products = productEntities.map { productEntity ->
-                productEntity.toDomain()
-            }
+    override fun observeCatalog(): Flow<CatalogData> = combine(
+        catalogDao.observeCategories(),
+        catalogDao.observeProducts(),
+    ) { categoryEntities, productEntities ->
+        val products = productEntities.map { productEntity ->
+            productEntity.toDomain()
+        }
 
-            val categories = categoryEntities
-                .map { categoryEntity -> categoryEntity.toDomain() }
-                .withNewCategoryIfNeeded(products)
+        val categories = categoryEntities
+            .map { categoryEntity -> categoryEntity.toDomain() }
+            .withNewCategoryIfNeeded(products)
 
-            CatalogData(
-                categories = categories,
-                products = products
-            )
-        }.distinctUntilChanged()
-    }
+        CatalogData(
+            categories = categories,
+            products = products,
+        )
+    }.distinctUntilChanged()
 
     override suspend fun refreshCatalog(): CatalogRefreshResult {
         if (!connectivityObserver.isOnline()) {
@@ -55,7 +53,7 @@ class CachedCatalogRepository(
                 },
                 products = catalog.products.mapIndexed { index, product ->
                     product.toEntity(sortOrder = index)
-                }
+                },
             )
 
             CatalogRefreshResult.Success
@@ -68,9 +66,7 @@ class CachedCatalogRepository(
         }
     }
 
-    override suspend fun hasCachedCatalog(): Boolean {
-        return catalogDao.getProductsCount() > 0
-    }
+    override suspend fun hasCachedCatalog(): Boolean = catalogDao.getProductsCount() > 0
 
     private fun List<Category>.withNewCategoryIfNeeded(products: List<Product>): List<Category> {
         val hasNewProducts = products.any { product ->
@@ -94,8 +90,8 @@ class CachedCatalogRepository(
         return listOf(
             Category(
                 id = CatalogConstants.NEW_CATEGORY_ID,
-                name = CatalogConstants.NEW_CATEGORY_NAME
-            )
+                name = CatalogConstants.NEW_CATEGORY_NAME,
+            ),
         ) + this
     }
 }

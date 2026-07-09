@@ -32,11 +32,7 @@ import ru.fefu.store.ui.theme.StoreColors
 import ru.fefu.store.util.formatPrice
 
 @Composable
-fun ProductCard(
-    product: Product,
-    onClick: (Product) -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun ProductCard(product: Product, onClick: (Product) -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .background(StoreColors.Background)
@@ -44,11 +40,11 @@ fun ProductCard(
                 onClick(product)
             }
             .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.Top
+        verticalAlignment = Alignment.Top,
     ) {
         ProductImage(
             imageUrl = product.imageUrl,
-            productName = product.name
+            productName = product.name,
         )
 
         Spacer(modifier = Modifier.width(16.dp))
@@ -57,7 +53,7 @@ fun ProductCard(
             modifier = Modifier
                 .weight(1f)
                 .padding(top = 2.dp),
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
         ) {
             Text(
                 text = product.name,
@@ -65,7 +61,7 @@ fun ProductCard(
                 fontWeight = FontWeight.Bold,
                 color = StoreColors.TextPrimary,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
 
             Text(
@@ -74,7 +70,7 @@ fun ProductCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = StoreColors.TextSecondary,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -86,13 +82,13 @@ fun ProductCard(
                 shape = RoundedCornerShape(4.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = StoreColors.AccentLight,
-                    contentColor = StoreColors.Accent
-                )
+                    contentColor = StoreColors.Accent,
+                ),
             ) {
                 Text(
                     text = formatPrice(product.priceInKopecks),
                     style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
@@ -100,16 +96,13 @@ fun ProductCard(
 }
 
 @Composable
-private fun ProductImage(
-    imageUrl: String,
-    productName: String
-) {
+private fun ProductImage(imageUrl: String, productName: String) {
     Box(
         modifier = Modifier
             .size(width = 112.dp, height = 136.dp)
             .clip(RoundedCornerShape(2.dp))
             .background(StoreColors.ChipBackground),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         AsyncImage(
             model = imageUrl,
@@ -117,7 +110,7 @@ private fun ProductImage(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(0.82f),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
     }
 }

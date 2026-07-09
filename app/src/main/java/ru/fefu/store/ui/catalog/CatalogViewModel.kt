@@ -17,10 +17,7 @@ import ru.fefu.store.domain.CatalogConstants
 import ru.fefu.store.domain.model.Category
 import ru.fefu.store.domain.model.Product
 
-class CatalogViewModel(
-    private val repository: CatalogRepository,
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+class CatalogViewModel(private val repository: CatalogRepository, private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     private val _uiState = MutableStateFlow<CatalogUiState>(CatalogUiState.Loading)
     val uiState: StateFlow<CatalogUiState> = _uiState.asStateFlow()
@@ -76,7 +73,7 @@ class CatalogViewModel(
                     } else {
                         _uiState.value = CatalogUiState.Error(
                             title = "Нет сети",
-                            description = "Каталог пока не сохранён на устройстве. Подключитесь к интернету и попробуйте снова."
+                            description = "Каталог пока не сохранён на устройстве. Подключитесь к интернету и попробуйте снова.",
                         )
                     }
                 }
@@ -93,7 +90,7 @@ class CatalogViewModel(
                     } else {
                         _uiState.value = CatalogUiState.Error(
                             title = "Не удалось загрузить каталог",
-                            description = "Проверьте подключение к интернету и попробуйте снова."
+                            description = "Проверьте подключение к интернету и попробуйте снова.",
                         )
                     }
                 }
@@ -167,24 +164,19 @@ class CatalogViewModel(
             selectedCategoryId = categoryId,
             products = filteredProducts,
             isRefreshing = isRefreshing,
-            isOffline = isOffline
+            isOffline = isOffline,
         )
     }
 
-    class Factory(
-        private val repository: CatalogRepository
-    ) : ViewModelProvider.Factory {
+    class Factory(private val repository: CatalogRepository) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(
-            modelClass: Class<T>,
-            extras: CreationExtras
-        ): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             val savedStateHandle = extras.createSavedStateHandle()
 
             return CatalogViewModel(
                 repository = repository,
-                savedStateHandle = savedStateHandle
+                savedStateHandle = savedStateHandle,
             ) as T
         }
     }

@@ -13,5 +13,5 @@ data class Product(
     val material: String,
     val weight: String,
     val season: String,
-    val countryOfOrigin: String
+    val countryOfOrigin: String,
 )

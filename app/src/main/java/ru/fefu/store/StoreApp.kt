@@ -1,5 +1,6 @@
 package ru.fefu.store
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.ShoppingCart
@@ -22,7 +23,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.foundation.layout.padding
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.fefu.store.data.repository.CartRepository
 import ru.fefu.store.data.repository.CatalogRepository
@@ -36,10 +36,7 @@ import ru.fefu.store.ui.theme.StoreColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StoreApp(
-    catalogRepository: CatalogRepository,
-    cartRepository: CartRepository
-) {
+fun StoreApp(catalogRepository: CatalogRepository, cartRepository: CartRepository) {
     var selectedDestination by rememberSaveable {
         mutableStateOf(StoreDestination.Catalog.route)
     }
@@ -49,15 +46,15 @@ fun StoreApp(
     }
 
     val productSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
+        skipPartiallyExpanded = true,
     )
 
     val catalogViewModel: CatalogViewModel = viewModel(
-        factory = CatalogViewModel.Factory(catalogRepository)
+        factory = CatalogViewModel.Factory(catalogRepository),
     )
 
     val cartViewModel: CartViewModel = viewModel(
-        factory = CartViewModel.Factory(cartRepository)
+        factory = CartViewModel.Factory(cartRepository),
     )
 
     val catalogUiState by catalogViewModel.uiState.collectAsState()
@@ -70,9 +67,9 @@ fun StoreApp(
                 cartItemsCount = cartUiState.totalQuantity,
                 onDestinationClick = { route ->
                     selectedDestination = route
-                }
+                },
             )
-        }
+        },
     ) { innerPadding ->
         when (selectedDestination) {
             StoreDestination.Catalog.route -> {
@@ -83,7 +80,7 @@ fun StoreApp(
                     onProductClick = { product ->
                         selectedProduct = product
                     },
-                    onRetryClick = catalogViewModel::refreshCatalog
+                    onRetryClick = catalogViewModel::refreshCatalog,
                 )
             }
 
@@ -103,7 +100,7 @@ fun StoreApp(
                     onReturnHomeClick = {
                         cartViewModel.dismissOrderSuccess()
                         selectedDestination = StoreDestination.Catalog.route
-                    }
+                    },
                 )
             }
         }
@@ -119,31 +116,27 @@ fun StoreApp(
             onAddToCartClick = { addedProduct, selectedSize ->
                 cartViewModel.addToCart(
                     product = addedProduct,
-                    selectedSize = selectedSize
+                    selectedSize = selectedSize,
                 )
                 selectedProduct = null
-            }
+            },
         )
     }
 }
 
 @Composable
-private fun StoreBottomNavigationBar(
-    selectedRoute: String,
-    cartItemsCount: Int,
-    onDestinationClick: (String) -> Unit
-) {
+private fun StoreBottomNavigationBar(selectedRoute: String, cartItemsCount: Int, onDestinationClick: (String) -> Unit) {
     val navigationItemColors = NavigationBarItemDefaults.colors(
         selectedIconColor = StoreColors.Accent,
         selectedTextColor = StoreColors.Accent,
-        indicatorColor = StoreColors.AccentLight
+        indicatorColor = StoreColors.AccentLight,
     )
 
     val catalogLabel = stringResource(R.string.nav_catalog)
     val cartLabel = stringResource(R.string.nav_cart)
 
     NavigationBar(
-        containerColor = StoreColors.BottomNavigationBackground
+        containerColor = StoreColors.BottomNavigationBackground,
     ) {
         NavigationBarItem(
             selected = selectedRoute == StoreDestination.Catalog.route,
@@ -153,13 +146,13 @@ private fun StoreBottomNavigationBar(
             icon = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.List,
-                    contentDescription = catalogLabel
+                    contentDescription = catalogLabel,
                 )
             },
             label = {
                 Text(text = catalogLabel)
             },
-            colors = navigationItemColors
+            colors = navigationItemColors,
         )
 
         NavigationBarItem(
@@ -173,36 +166,34 @@ private fun StoreBottomNavigationBar(
                         if (cartItemsCount > 0) {
                             Badge(
                                 containerColor = StoreColors.Accent,
-                                contentColor = androidx.compose.ui.graphics.Color.White
+                                contentColor = androidx.compose.ui.graphics.Color.White,
                             ) {
                                 Text(
                                     text = if (cartItemsCount > 99) {
                                         "99+"
                                     } else {
                                         cartItemsCount.toString()
-                                    }
+                                    },
                                 )
                             }
                         }
-                    }
+                    },
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.ShoppingCart,
-                        contentDescription = cartLabel
+                        contentDescription = cartLabel,
                     )
                 }
             },
             label = {
                 Text(text = cartLabel)
             },
-            colors = navigationItemColors
+            colors = navigationItemColors,
         )
     }
 }
 
-private enum class StoreDestination(
-    val route: String
-) {
+private enum class StoreDestination(val route: String) {
     Catalog(route = "catalog"),
-    Cart(route = "cart")
+    Cart(route = "cart"),
 }

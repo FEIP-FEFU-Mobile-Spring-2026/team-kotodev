@@ -28,7 +28,7 @@ class NetworkCatalogDataSource {
             if (statusCode !in HTTP_SUCCESS_RANGE) {
                 throw CatalogApiException(
                     statusCode = statusCode,
-                    message = "Catalog API returned HTTP $statusCode"
+                    message = "Catalog API returned HTTP $statusCode",
                 )
             }
 
@@ -46,12 +46,10 @@ class NetworkCatalogDataSource {
         }
     }
 
-    private fun parseCatalog(root: JSONObject): CatalogData {
-        return CatalogData(
-            categories = parseCategories(root),
-            products = parseProducts(root)
-        )
-    }
+    private fun parseCatalog(root: JSONObject): CatalogData = CatalogData(
+        categories = parseCategories(root),
+        products = parseProducts(root),
+    )
 
     private fun parseCategories(root: JSONObject): List<Category> {
         val categoriesArray = root.getJSONArray("categories")
@@ -63,8 +61,8 @@ class NetworkCatalogDataSource {
                 add(
                     Category(
                         id = categoryObject.getString("id"),
-                        name = categoryObject.getString("name")
-                    )
+                        name = categoryObject.getString("name"),
+                    ),
                 )
             }
         }
@@ -91,8 +89,8 @@ class NetworkCatalogDataSource {
                         material = itemObject.getString("material"),
                         weight = itemObject.getString("weight"),
                         season = itemObject.getString("season"),
-                        countryOfOrigin = itemObject.getString("countryOfOrigin")
-                    )
+                        countryOfOrigin = itemObject.getString("countryOfOrigin"),
+                    ),
                 )
             }
         }
@@ -118,8 +116,8 @@ class NetworkCatalogDataSource {
                 add(
                     ProductSize(
                         id = sizeObject.getString("id"),
-                        name = sizeObject.getString("name")
-                    )
+                        name = sizeObject.getString("name"),
+                    ),
                 )
             }
         }

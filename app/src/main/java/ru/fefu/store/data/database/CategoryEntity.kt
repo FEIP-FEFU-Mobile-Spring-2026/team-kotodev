@@ -9,20 +9,16 @@ data class CategoryEntity(
     @PrimaryKey
     val id: String,
     val name: String,
-    val sortOrder: Int
+    val sortOrder: Int,
 )
 
-fun CategoryEntity.toDomain(): Category {
-    return Category(
-        id = id,
-        name = name
-    )
-}
+fun CategoryEntity.toDomain(): Category = Category(
+    id = id,
+    name = name,
+)
 
-fun Category.toEntity(sortOrder: Int): CategoryEntity {
-    return CategoryEntity(
-        id = id,
-        name = name,
-        sortOrder = sortOrder
-    )
-}
+fun Category.toEntity(sortOrder: Int): CategoryEntity = CategoryEntity(
+    id = id,
+    name = name,
+    sortOrder = sortOrder,
+)

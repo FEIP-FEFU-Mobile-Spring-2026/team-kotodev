@@ -10,5 +10,5 @@ data class CartUiState(
     val customerEmail: String = "",
     val comment: String = "",
     val isCheckoutAvailable: Boolean = false,
-    val isOrderSuccessVisible: Boolean = false
+    val isOrderSuccessVisible: Boolean = false,
 )
