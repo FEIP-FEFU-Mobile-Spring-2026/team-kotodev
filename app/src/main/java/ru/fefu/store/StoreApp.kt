@@ -1,39 +1,44 @@
 package ru.fefu.store
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.padding
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ru.fefu.store.data.repository.CartRepository
 import ru.fefu.store.data.repository.CatalogRepository
-import ru.fefu.store.ui.cart.CartPlaceholderScreen
+import ru.fefu.store.domain.model.Product
+import ru.fefu.store.ui.cart.CartScreen
+import ru.fefu.store.ui.cart.CartViewModel
 import ru.fefu.store.ui.catalog.CatalogScreen
 import ru.fefu.store.ui.catalog.CatalogViewModel
-import ru.fefu.store.ui.theme.StoreColors
-import androidx.compose.ui.res.stringResource
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.remember
-import ru.fefu.store.domain.model.Product
 import ru.fefu.store.ui.product.ProductDetailsBottomSheet
+import ru.fefu.store.ui.theme.StoreColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreApp(
-    catalogRepository: CatalogRepository
+    catalogRepository: CatalogRepository,
+    cartRepository: CartRepository
 ) {
     var selectedDestination by rememberSaveable {
         mutableStateOf(StoreDestination.Catalog.route)
@@ -51,12 +56,18 @@ fun StoreApp(
         factory = CatalogViewModel.Factory(catalogRepository)
     )
 
+    val cartViewModel: CartViewModel = viewModel(
+        factory = CartViewModel.Factory(cartRepository)
+    )
+
     val catalogUiState by catalogViewModel.uiState.collectAsState()
+    val cartUiState by cartViewModel.uiState.collectAsState()
 
     Scaffold(
         bottomBar = {
             StoreBottomNavigationBar(
                 selectedRoute = selectedDestination,
+                cartItemsCount = cartUiState.totalQuantity,
                 onDestinationClick = { route ->
                     selectedDestination = route
                 }
@@ -77,8 +88,22 @@ fun StoreApp(
             }
 
             StoreDestination.Cart.route -> {
-                CartPlaceholderScreen(
-                    modifier = Modifier.padding(innerPadding)
+                CartScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    uiState = cartUiState,
+                    onIncreaseClick = cartViewModel::increaseQuantity,
+                    onDecreaseClick = cartViewModel::decreaseQuantity,
+                    onRemoveClick = cartViewModel::removeItem,
+                    onClearCartClick = cartViewModel::clearCart,
+                    onCustomerNameChange = cartViewModel::onCustomerNameChange,
+                    onCustomerEmailChange = cartViewModel::onCustomerEmailChange,
+                    onCommentChange = cartViewModel::onCommentChange,
+                    onCheckoutClick = cartViewModel::checkout,
+                    onOrderSuccessDismiss = cartViewModel::dismissOrderSuccess,
+                    onReturnHomeClick = {
+                        cartViewModel.dismissOrderSuccess()
+                        selectedDestination = StoreDestination.Catalog.route
+                    }
                 )
             }
         }
@@ -91,8 +116,12 @@ fun StoreApp(
             onDismissRequest = {
                 selectedProduct = null
             },
-            onAddToCartClick = { _, _ ->
-                // Логика добавления в корзину будет реализована в следующих блоках.
+            onAddToCartClick = { addedProduct, selectedSize ->
+                cartViewModel.addToCart(
+                    product = addedProduct,
+                    selectedSize = selectedSize
+                )
+                selectedProduct = null
             }
         )
     }
@@ -101,6 +130,7 @@ fun StoreApp(
 @Composable
 private fun StoreBottomNavigationBar(
     selectedRoute: String,
+    cartItemsCount: Int,
     onDestinationClick: (String) -> Unit
 ) {
     val navigationItemColors = NavigationBarItemDefaults.colors(
@@ -138,10 +168,29 @@ private fun StoreBottomNavigationBar(
                 onDestinationClick(StoreDestination.Cart.route)
             },
             icon = {
-                Icon(
-                    imageVector = Icons.Outlined.ShoppingCart,
-                    contentDescription = cartLabel
-                )
+                BadgedBox(
+                    badge = {
+                        if (cartItemsCount > 0) {
+                            Badge(
+                                containerColor = StoreColors.Accent,
+                                contentColor = androidx.compose.ui.graphics.Color.White
+                            ) {
+                                Text(
+                                    text = if (cartItemsCount > 99) {
+                                        "99+"
+                                    } else {
+                                        cartItemsCount.toString()
+                                    }
+                                )
+                            }
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.ShoppingCart,
+                        contentDescription = cartLabel
+                    )
+                }
             },
             label = {
                 Text(text = cartLabel)
