@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">FEFU Store</string>
+
+    <string name="nav_catalog">Каталог</string>
+    <string name="nav_cart">Корзина</string>
+
+    <string name="catalog_error_message">Не удалось загрузить каталог</string>
+    <string name="catalog_error_description">Проверьте файл products.json и попробуйте снова.</string>
+    <string name="retry">Повторить</string>
+
+    <string name="cart_empty_title">Корзина</string>
+    <string name="cart_empty_description">Корзина будет реализована в следующих блоках.</string>
 </resources>

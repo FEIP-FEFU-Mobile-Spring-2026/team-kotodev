@@ -7,12 +7,17 @@ import ru.fefu.store.ui.theme.FEFUStoreTheme
 
 class MainActivity : ComponentActivity() {
 
+    private val appContainer
+        get() = (application as StoreApplication).appContainer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             FEFUStoreTheme {
-                StoreApp()
+                StoreApp(
+                    catalogRepository = appContainer.catalogRepository
+                )
             }
         }
     }
