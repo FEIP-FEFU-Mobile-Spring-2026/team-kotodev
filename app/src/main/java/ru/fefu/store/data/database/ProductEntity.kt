@@ -23,45 +23,41 @@ data class ProductEntity(
     val weight: String,
     val season: String,
     val countryOfOrigin: String,
-    val sortOrder: Int
+    val sortOrder: Int,
 )
 
-fun ProductEntity.toDomain(): Product {
-    return Product(
-        id = id,
-        name = name,
-        shortDescription = shortDescription,
-        longDescription = longDescription,
-        priceInKopecks = priceInKopecks,
-        imageUrl = imageUrl,
-        tags = decodeTags(tagsJson),
-        sizes = decodeSizes(sizesJson),
-        categoryId = categoryId,
-        material = material,
-        weight = weight,
-        season = season,
-        countryOfOrigin = countryOfOrigin
-    )
-}
+fun ProductEntity.toDomain(): Product = Product(
+    id = id,
+    name = name,
+    shortDescription = shortDescription,
+    longDescription = longDescription,
+    priceInKopecks = priceInKopecks,
+    imageUrl = imageUrl,
+    tags = decodeTags(tagsJson),
+    sizes = decodeSizes(sizesJson),
+    categoryId = categoryId,
+    material = material,
+    weight = weight,
+    season = season,
+    countryOfOrigin = countryOfOrigin,
+)
 
-fun Product.toEntity(sortOrder: Int): ProductEntity {
-    return ProductEntity(
-        id = id,
-        name = name,
-        shortDescription = shortDescription,
-        longDescription = longDescription,
-        priceInKopecks = priceInKopecks,
-        imageUrl = imageUrl,
-        tagsJson = encodeTags(tags),
-        sizesJson = encodeSizes(sizes),
-        categoryId = categoryId,
-        material = material,
-        weight = weight,
-        season = season,
-        countryOfOrigin = countryOfOrigin,
-        sortOrder = sortOrder
-    )
-}
+fun Product.toEntity(sortOrder: Int): ProductEntity = ProductEntity(
+    id = id,
+    name = name,
+    shortDescription = shortDescription,
+    longDescription = longDescription,
+    priceInKopecks = priceInKopecks,
+    imageUrl = imageUrl,
+    tagsJson = encodeTags(tags),
+    sizesJson = encodeSizes(sizes),
+    categoryId = categoryId,
+    material = material,
+    weight = weight,
+    season = season,
+    countryOfOrigin = countryOfOrigin,
+    sortOrder = sortOrder,
+)
 
 private fun encodeTags(tags: List<String>): String {
     val jsonArray = JSONArray()
@@ -90,7 +86,7 @@ private fun encodeSizes(sizes: List<ProductSize>): String {
         jsonArray.put(
             JSONObject()
                 .put("id", size.id)
-                .put("name", size.name)
+                .put("name", size.name),
         )
     }
 
@@ -107,8 +103,8 @@ private fun decodeSizes(value: String): List<ProductSize> {
             add(
                 ProductSize(
                     id = sizeObject.getString("id"),
-                    name = sizeObject.getString("name")
-                )
+                    name = sizeObject.getString("name"),
+                ),
             )
         }
     }

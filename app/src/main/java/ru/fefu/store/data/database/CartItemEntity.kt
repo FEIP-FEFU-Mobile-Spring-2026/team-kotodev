@@ -6,11 +6,7 @@ import androidx.room.Entity
     tableName = "cart_items",
     primaryKeys = [
         "productId",
-        "sizeId"
-    ]
+        "sizeId",
+    ],
 )
-data class CartItemEntity(
-    val productId: String,
-    val sizeId: String,
-    val quantity: Int
-)
+data class CartItemEntity(val productId: String, val sizeId: String, val quantity: Int)

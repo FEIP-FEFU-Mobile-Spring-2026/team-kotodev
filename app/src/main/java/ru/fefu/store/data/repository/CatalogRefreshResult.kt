@@ -6,7 +6,5 @@ sealed interface CatalogRefreshResult {
 
     data object NoInternet : CatalogRefreshResult
 
-    data class Error(
-        val throwable: Throwable
-    ) : CatalogRefreshResult
+    data class Error(val throwable: Throwable) : CatalogRefreshResult
 }

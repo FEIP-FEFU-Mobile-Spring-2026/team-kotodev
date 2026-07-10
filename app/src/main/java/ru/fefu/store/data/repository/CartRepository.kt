@@ -9,25 +9,13 @@ interface CartRepository {
 
     fun observeTotalQuantity(): Flow<Int>
 
-    suspend fun addToCart(
-        productId: String,
-        sizeId: String
-    )
+    suspend fun addToCart(productId: String, sizeId: String)
 
-    suspend fun increaseQuantity(
-        productId: String,
-        sizeId: String
-    )
+    suspend fun increaseQuantity(productId: String, sizeId: String)
 
-    suspend fun decreaseQuantity(
-        productId: String,
-        sizeId: String
-    )
+    suspend fun decreaseQuantity(productId: String, sizeId: String)
 
-    suspend fun removeFromCart(
-        productId: String,
-        sizeId: String
-    )
+    suspend fun removeFromCart(productId: String, sizeId: String)
 
     suspend fun clearCart()
 }

@@ -17,15 +17,13 @@ interface AppContainer {
     val cartRepository: CartRepository
 }
 
-class DefaultAppContainer(
-    private val context: Context
-) : AppContainer {
+class DefaultAppContainer(private val context: Context) : AppContainer {
 
     private val database: StoreDatabase by lazy {
         Room.databaseBuilder(
             context.applicationContext,
             StoreDatabase::class.java,
-            "store.db"
+            "store.db",
         )
             .addMigrations(MIGRATION_1_2)
             .build()
@@ -37,7 +35,7 @@ class DefaultAppContainer(
 
     private val connectivityObserver: ConnectivityObserver by lazy {
         ConnectivityObserver(
-            context = context.applicationContext
+            context = context.applicationContext,
         )
     }
 
@@ -45,14 +43,14 @@ class DefaultAppContainer(
         CachedCatalogRepository(
             networkCatalogDataSource = networkCatalogDataSource,
             catalogDao = database.catalogDao(),
-            connectivityObserver = connectivityObserver
+            connectivityObserver = connectivityObserver,
         )
     }
 
     override val cartRepository: CartRepository by lazy {
         RoomCartRepository(
             cartDao = database.cartDao(),
-            catalogRepository = catalogRepository
+            catalogRepository = catalogRepository,
         )
     }
 
@@ -68,7 +66,7 @@ class DefaultAppContainer(
                         `quantity` INTEGER NOT NULL,
                         PRIMARY KEY(`productId`, `sizeId`)
                     )
-                    """.trimIndent()
+                    """.trimIndent(),
                 )
             }
         }

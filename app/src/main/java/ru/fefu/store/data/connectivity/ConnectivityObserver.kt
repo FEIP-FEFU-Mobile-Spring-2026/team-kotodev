@@ -4,9 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
-class ConnectivityObserver(
-    context: Context
-) {
+class ConnectivityObserver(context: Context) {
 
     private val connectivityManager = context.getSystemService(ConnectivityManager::class.java)
 
@@ -15,6 +13,6 @@ class ConnectivityObserver(
         val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
 
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 }

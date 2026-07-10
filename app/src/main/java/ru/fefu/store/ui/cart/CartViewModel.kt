@@ -9,13 +9,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.fefu.store.data.repository.CartRepository
+import ru.fefu.store.domain.checkout.CheckoutValidator
 import ru.fefu.store.domain.model.CartLineItem
 import ru.fefu.store.domain.model.Product
 import ru.fefu.store.domain.model.ProductSize
 
-class CartViewModel(
-    private val cartRepository: CartRepository
-) : ViewModel() {
+class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
@@ -25,10 +24,7 @@ class CartViewModel(
         observeTotalQuantity()
     }
 
-    fun addToCart(
-        product: Product,
-        selectedSize: ProductSize?
-    ) {
+    fun addToCart(product: Product, selectedSize: ProductSize?) {
         if (selectedSize == null) {
             return
         }
@@ -36,7 +32,7 @@ class CartViewModel(
         viewModelScope.launch {
             cartRepository.addToCart(
                 productId = product.id,
-                sizeId = selectedSize.id
+                sizeId = selectedSize.id,
             )
         }
     }
@@ -45,7 +41,7 @@ class CartViewModel(
         viewModelScope.launch {
             cartRepository.increaseQuantity(
                 productId = item.product.id,
-                sizeId = item.size.id
+                sizeId = item.size.id,
             )
         }
     }
@@ -54,7 +50,7 @@ class CartViewModel(
         viewModelScope.launch {
             cartRepository.decreaseQuantity(
                 productId = item.product.id,
-                sizeId = item.size.id
+                sizeId = item.size.id,
             )
         }
     }
@@ -63,7 +59,7 @@ class CartViewModel(
         viewModelScope.launch {
             cartRepository.removeFromCart(
                 productId = item.product.id,
-                sizeId = item.size.id
+                sizeId = item.size.id,
             )
         }
     }
@@ -77,7 +73,7 @@ class CartViewModel(
     fun onCustomerNameChange(value: String) {
         _uiState.update { state ->
             state.copy(
-                customerName = value
+                customerName = value,
             ).withValidation()
         }
     }
@@ -85,7 +81,7 @@ class CartViewModel(
     fun onCustomerEmailChange(value: String) {
         _uiState.update { state ->
             state.copy(
-                customerEmail = value
+                customerEmail = value,
             ).withValidation()
         }
     }
@@ -93,7 +89,7 @@ class CartViewModel(
     fun onCommentChange(value: String) {
         _uiState.update { state ->
             state.copy(
-                comment = value
+                comment = value,
             )
         }
     }
@@ -114,7 +110,7 @@ class CartViewModel(
                     customerName = "",
                     customerEmail = "",
                     comment = "",
-                    isOrderSuccessVisible = true
+                    isOrderSuccessVisible = true,
                 ).withValidation()
             }
         }
@@ -123,7 +119,7 @@ class CartViewModel(
     fun dismissOrderSuccess() {
         _uiState.update { state ->
             state.copy(
-                isOrderSuccessVisible = false
+                isOrderSuccessVisible = false,
             )
         }
     }
@@ -134,7 +130,7 @@ class CartViewModel(
                 _uiState.update { state ->
                     state.copy(
                         items = cart.items,
-                        totalPriceInKopecks = cart.totalPriceInKopecks
+                        totalPriceInKopecks = cart.totalPriceInKopecks,
                     ).withValidation()
                 }
             }
@@ -146,7 +142,7 @@ class CartViewModel(
             cartRepository.observeTotalQuantity().collect { totalQuantity ->
                 _uiState.update { state ->
                     state.copy(
-                        totalQuantity = totalQuantity
+                        totalQuantity = totalQuantity,
                     )
                 }
             }
@@ -154,29 +150,20 @@ class CartViewModel(
     }
 
     private fun CartUiState.withValidation(): CartUiState {
-        val isNameValid = customerName.trim().isNotEmpty()
-        val isEmailValid = EMAIL_REGEX.matches(customerEmail.trim())
-
         return copy(
-            isCheckoutAvailable = items.isNotEmpty() && isNameValid && isEmailValid
+            isCheckoutAvailable = CheckoutValidator.isCheckoutAvailable(
+                name = customerName,
+                email = customerEmail,
+                hasItems = items.isNotEmpty()
+            )
         )
     }
 
-    class Factory(
-        private val cartRepository: CartRepository
-    ) : ViewModelProvider.Factory {
+    class Factory(private val cartRepository: CartRepository) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return CartViewModel(
-                cartRepository = cartRepository
-            ) as T
-        }
-    }
-
-    private companion object {
-        val EMAIL_REGEX = Regex(
-            pattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
-        )
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = CartViewModel(
+            cartRepository = cartRepository,
+        ) as T
     }
 }

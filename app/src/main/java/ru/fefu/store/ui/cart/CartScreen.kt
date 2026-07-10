@@ -34,7 +34,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -73,34 +72,34 @@ fun CartScreen(
     onCheckoutClick: () -> Unit,
     onOrderSuccessDismiss: () -> Unit,
     onReturnHomeClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var isClearDialogVisible by rememberSaveable {
         mutableStateOf(false)
     }
 
     val successSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
+        skipPartiallyExpanded = true,
     )
 
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(StoreColors.Background)
+            .background(StoreColors.Background),
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             CartHeader(
                 isClearEnabled = uiState.items.isNotEmpty(),
                 onClearClick = {
                     isClearDialogVisible = true
-                }
+                },
             )
 
             if (uiState.items.isEmpty()) {
                 EmptyCartState(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
             } else {
                 CartContent(
@@ -111,13 +110,13 @@ fun CartScreen(
                     onRemoveClick = onRemoveClick,
                     onCustomerNameChange = onCustomerNameChange,
                     onCustomerEmailChange = onCustomerEmailChange,
-                    onCommentChange = onCommentChange
+                    onCommentChange = onCommentChange,
                 )
 
                 CartBottomBlock(
                     totalPriceInKopecks = uiState.totalPriceInKopecks,
                     isCheckoutAvailable = uiState.isCheckoutAvailable,
-                    onCheckoutClick = onCheckoutClick
+                    onCheckoutClick = onCheckoutClick,
                 )
             }
         }
@@ -131,7 +130,7 @@ fun CartScreen(
             },
             onDismissRequest = {
                 isClearDialogVisible = false
-            }
+            },
         )
     }
 
@@ -139,34 +138,31 @@ fun CartScreen(
         OrderSuccessBottomSheet(
             sheetState = successSheetState,
             onDismissRequest = onOrderSuccessDismiss,
-            onReturnHomeClick = onReturnHomeClick
+            onReturnHomeClick = onReturnHomeClick,
         )
     }
 }
 
 @Composable
-private fun CartHeader(
-    isClearEnabled: Boolean,
-    onClearClick: () -> Unit
-) {
+private fun CartHeader(isClearEnabled: Boolean, onClearClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(52.dp)
             .background(Color.White),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "Корзина",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = StoreColors.TextPrimary
+            color = StoreColors.TextPrimary,
         )
 
         IconButton(
             modifier = Modifier.align(Alignment.CenterEnd),
             enabled = isClearEnabled,
-            onClick = onClearClick
+            onClick = onClearClick,
         ) {
             Icon(
                 imageVector = Icons.Outlined.Delete,
@@ -175,7 +171,7 @@ private fun CartHeader(
                     StoreColors.TextSecondary
                 } else {
                     StoreColors.TextSecondary.copy(alpha = 0.35f)
-                }
+                },
             )
         }
     }
@@ -190,15 +186,15 @@ private fun CartContent(
     onCustomerNameChange: (String) -> Unit,
     onCustomerEmailChange: (String) -> Unit,
     onCommentChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(bottom = 16.dp)
+        contentPadding = PaddingValues(bottom = 16.dp),
     ) {
         items(
             items = uiState.items,
-            key = { item -> "${item.product.id}_${item.size.id}" }
+            key = { item -> "${item.product.id}_${item.size.id}" },
         ) { item ->
             CartItemRow(
                 item = item,
@@ -210,7 +206,7 @@ private fun CartContent(
                 },
                 onRemoveClick = {
                     onRemoveClick(item)
-                }
+                },
             )
         }
 
@@ -221,28 +217,23 @@ private fun CartContent(
                 comment = uiState.comment,
                 onNameChange = onCustomerNameChange,
                 onEmailChange = onCustomerEmailChange,
-                onCommentChange = onCommentChange
+                onCommentChange = onCommentChange,
             )
         }
     }
 }
 
 @Composable
-private fun CartItemRow(
-    item: CartLineItem,
-    onIncreaseClick: () -> Unit,
-    onDecreaseClick: () -> Unit,
-    onRemoveClick: () -> Unit
-) {
+private fun CartItemRow(item: CartLineItem, onIncreaseClick: () -> Unit, onDecreaseClick: () -> Unit, onRemoveClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
-            .padding(start = 12.dp, top = 12.dp, end = 6.dp, bottom = 12.dp)
+            .padding(start = 12.dp, top = 12.dp, end = 6.dp, bottom = 12.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Top,
         ) {
             AsyncImage(
                 model = item.product.imageUrl,
@@ -251,26 +242,26 @@ private fun CartItemRow(
                     .size(width = 70.dp, height = 86.dp)
                     .clip(RoundedCornerShape(4.dp))
                     .background(StoreColors.ChipBackground),
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Fit,
             )
 
             Spacer(modifier = Modifier.width(10.dp))
 
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Text(
                     text = item.product.name,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = StoreColors.TextPrimary
+                    color = StoreColors.TextPrimary,
                 )
 
                 Text(
                     modifier = Modifier.padding(top = 2.dp),
                     text = "${item.product.shortDescription}\n${item.size.name}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = StoreColors.TextSecondary
+                    color = StoreColors.TextSecondary,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -279,12 +270,12 @@ private fun CartItemRow(
                     text = formatPrice(item.totalPriceInKopecks),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = StoreColors.Accent
+                    color = StoreColors.Accent,
                 )
             }
 
             Column(
-                horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.End,
             ) {
                 Text(
                     modifier = Modifier
@@ -294,7 +285,7 @@ private fun CartItemRow(
                         },
                     text = "×",
                     style = MaterialTheme.typography.titleMedium,
-                    color = StoreColors.TextSecondary
+                    color = StoreColors.TextSecondary,
                 )
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -302,7 +293,7 @@ private fun CartItemRow(
                 QuantityControl(
                     quantity = item.quantity,
                     onDecreaseClick = onDecreaseClick,
-                    onIncreaseClick = onIncreaseClick
+                    onIncreaseClick = onIncreaseClick,
                 )
             }
         }
@@ -310,22 +301,18 @@ private fun CartItemRow(
 
     HorizontalDivider(
         thickness = 1.dp,
-        color = StoreColors.Divider
+        color = StoreColors.Divider,
     )
 }
 
 @Composable
-private fun QuantityControl(
-    quantity: Int,
-    onDecreaseClick: () -> Unit,
-    onIncreaseClick: () -> Unit
-) {
+private fun QuantityControl(quantity: Int, onDecreaseClick: () -> Unit, onIncreaseClick: () -> Unit) {
     Row(
         modifier = Modifier
             .height(32.dp)
             .clip(RoundedCornerShape(2.dp))
             .background(StoreColors.ChipBackground),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
@@ -333,13 +320,13 @@ private fun QuantityControl(
                 .clickable {
                     onDecreaseClick()
                 },
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = "−",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = StoreColors.TextPrimary
+                color = StoreColors.TextPrimary,
             )
         }
 
@@ -349,7 +336,7 @@ private fun QuantityControl(
             style = MaterialTheme.typography.bodySmall,
             color = StoreColors.TextPrimary,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         Box(
@@ -358,13 +345,13 @@ private fun QuantityControl(
                 .clickable {
                     onIncreaseClick()
                 },
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = "+",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = StoreColors.TextPrimary
+                color = StoreColors.TextPrimary,
             )
         }
     }
@@ -377,27 +364,27 @@ private fun CheckoutForm(
     comment: String,
     onNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
-    onCommentChange: (String) -> Unit
+    onCommentChange: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(StoreColors.Background)
             .padding(horizontal = 12.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         CartTextField(
             value = name,
             onValueChange = onNameChange,
             placeholder = "Имя*",
-            singleLine = true
+            singleLine = true,
         )
 
         CartTextField(
             value = email,
             onValueChange = onEmailChange,
             placeholder = "Почта*",
-            singleLine = true
+            singleLine = true,
         )
 
         CartTextField(
@@ -405,7 +392,7 @@ private fun CheckoutForm(
             value = comment,
             onValueChange = onCommentChange,
             placeholder = "Комментарий к заказу",
-            singleLine = false
+            singleLine = false,
         )
     }
 }
@@ -416,7 +403,7 @@ private fun CartTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     singleLine: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     TextField(
         modifier = modifier
@@ -428,7 +415,7 @@ private fun CartTextField(
             Text(
                 text = placeholder,
                 style = MaterialTheme.typography.bodySmall,
-                color = StoreColors.TextSecondary
+                color = StoreColors.TextSecondary,
             )
         },
         singleLine = singleLine,
@@ -439,33 +426,29 @@ private fun CartTextField(
             disabledContainerColor = Color.White,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            cursorColor = StoreColors.Accent
-        )
+            cursorColor = StoreColors.Accent,
+        ),
     )
 }
 
 @Composable
-private fun CartBottomBlock(
-    totalPriceInKopecks: Long,
-    isCheckoutAvailable: Boolean,
-    onCheckoutClick: () -> Unit
-) {
+private fun CartBottomBlock(totalPriceInKopecks: Long, isCheckoutAvailable: Boolean, onCheckoutClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
             .padding(horizontal = 12.dp, vertical = 10.dp)
-            .imePadding()
+            .imePadding(),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = "Итого",
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
-                color = StoreColors.TextPrimary
+                color = StoreColors.TextPrimary,
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -474,7 +457,7 @@ private fun CartBottomBlock(
                 text = formatPrice(totalPriceInKopecks),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = StoreColors.TextPrimary
+                color = StoreColors.TextPrimary,
             )
         }
 
@@ -490,35 +473,33 @@ private fun CartBottomBlock(
                 containerColor = StoreColors.Accent,
                 contentColor = Color.White,
                 disabledContainerColor = StoreColors.Accent.copy(alpha = 0.45f),
-                disabledContentColor = Color.White
-            )
+                disabledContentColor = Color.White,
+            ),
         ) {
             Text(
                 text = "Оформить",
                 style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
     }
 }
 
 @Composable
-private fun EmptyCartState(
-    modifier: Modifier = Modifier
-) {
+private fun EmptyCartState(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = "Корзина пуста",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = StoreColors.TextPrimary,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         Text(
@@ -526,16 +507,13 @@ private fun EmptyCartState(
             text = "Добавьте товары из каталога, чтобы оформить заказ.",
             style = MaterialTheme.typography.bodyMedium,
             color = StoreColors.TextSecondary,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
 
 @Composable
-private fun ClearCartDialog(
-    onConfirmClick: () -> Unit,
-    onDismissRequest: () -> Unit
-) {
+private fun ClearCartDialog(onConfirmClick: () -> Unit, onDismissRequest: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
@@ -546,36 +524,32 @@ private fun ClearCartDialog(
         },
         confirmButton = {
             TextButton(
-                onClick = onConfirmClick
+                onClick = onConfirmClick,
             ) {
                 Text(text = "Очистить")
             }
         },
         dismissButton = {
             TextButton(
-                onClick = onDismissRequest
+                onClick = onDismissRequest,
             ) {
                 Text(text = "Отмена")
             }
-        }
+        },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OrderSuccessBottomSheet(
-    sheetState: SheetState,
-    onDismissRequest: () -> Unit,
-    onReturnHomeClick: () -> Unit
-) {
+private fun OrderSuccessBottomSheet(sheetState: SheetState, onDismissRequest: () -> Unit, onReturnHomeClick: () -> Unit) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         containerColor = Color.White,
         shape = RoundedCornerShape(
             topStart = 14.dp,
-            topEnd = 14.dp
-        )
+            topEnd = 14.dp,
+        ),
     ) {
         Column(
             modifier = Modifier
@@ -583,7 +557,7 @@ private fun OrderSuccessBottomSheet(
                 .navigationBarsPadding()
                 .padding(horizontal = 18.dp)
                 .padding(bottom = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
                 modifier = Modifier
@@ -591,17 +565,17 @@ private fun OrderSuccessBottomSheet(
                     .border(
                         border = BorderStroke(
                             width = 3.dp,
-                            color = StoreColors.TextSecondary
+                            color = StoreColors.TextSecondary,
                         ),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
                     ),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ShoppingBag,
                     contentDescription = null,
                     modifier = Modifier.size(46.dp),
-                    tint = StoreColors.TextSecondary
+                    tint = StoreColors.TextSecondary,
                 )
             }
 
@@ -613,7 +587,7 @@ private fun OrderSuccessBottomSheet(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = StoreColors.TextPrimary,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
             )
 
             Text(
@@ -623,7 +597,7 @@ private fun OrderSuccessBottomSheet(
                 text = "Подтверждение и чек отправили на вашу почту",
                 style = MaterialTheme.typography.bodySmall,
                 color = StoreColors.TextSecondary,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
             )
 
             Button(
@@ -635,13 +609,13 @@ private fun OrderSuccessBottomSheet(
                 shape = RoundedCornerShape(6.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = StoreColors.Accent,
-                    contentColor = Color.White
-                )
+                    contentColor = Color.White,
+                ),
             ) {
                 Text(
                     text = "Вернуться на главную",
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
