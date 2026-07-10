@@ -5,7 +5,8 @@
     <string name="nav_cart">Корзина</string>
 
     <string name="catalog_error_message">Не удалось загрузить каталог</string>
-    <string name="catalog_error_description">Проверьте файл products.json и попробуйте снова.</string>
+    <string name="catalog_error_description">Проверьте подключение к интернету и попробуйте снова.</string>
+    <string name="catalog_offline_banner">Нет сети.</string>
     <string name="retry">Повторить</string>
 
     <string name="cart_empty_title">Корзина</string>
