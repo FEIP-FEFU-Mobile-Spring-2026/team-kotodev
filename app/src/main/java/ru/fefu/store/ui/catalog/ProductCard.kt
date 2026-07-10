@@ -1,17 +1,18 @@
 package ru.fefu.store.ui.catalog
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -27,17 +28,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ru.fefu.store.domain.model.Product
-import ru.fefu.store.util.formatPrice
 import ru.fefu.store.ui.theme.StoreColors
+import ru.fefu.store.util.formatPrice
 
 @Composable
 fun ProductCard(
     product: Product,
+    onClick: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
             .background(StoreColors.Background)
+            .clickable {
+                onClick(product)
+            }
             .padding(vertical = 4.dp),
         verticalAlignment = Alignment.Top
     ) {
@@ -75,13 +80,14 @@ fun ProductCard(
             Spacer(modifier = Modifier.height(14.dp))
 
             Button(
-                onClick = { },
+                onClick = {
+                    onClick(product)
+                },
                 shape = RoundedCornerShape(4.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = StoreColors.AccentLight,
                     contentColor = StoreColors.Accent
-                ),
-                contentPadding = ButtonDefaults.ContentPadding
+                )
             ) {
                 Text(
                     text = formatPrice(product.priceInKopecks),

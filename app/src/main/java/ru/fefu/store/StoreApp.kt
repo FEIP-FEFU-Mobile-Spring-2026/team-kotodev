@@ -24,7 +24,13 @@ import ru.fefu.store.ui.catalog.CatalogScreen
 import ru.fefu.store.ui.catalog.CatalogViewModel
 import ru.fefu.store.ui.theme.StoreColors
 import androidx.compose.ui.res.stringResource
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.remember
+import ru.fefu.store.domain.model.Product
+import ru.fefu.store.ui.product.ProductDetailsBottomSheet
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreApp(
     catalogRepository: CatalogRepository
@@ -32,6 +38,14 @@ fun StoreApp(
     var selectedDestination by rememberSaveable {
         mutableStateOf(StoreDestination.Catalog.route)
     }
+
+    var selectedProduct by remember {
+        mutableStateOf<Product?>(null)
+    }
+
+    val productSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
 
     val catalogViewModel: CatalogViewModel = viewModel(
         factory = CatalogViewModel.Factory(catalogRepository)
@@ -55,6 +69,9 @@ fun StoreApp(
                     modifier = Modifier.padding(innerPadding),
                     uiState = catalogUiState,
                     onCategoryClick = catalogViewModel::selectCategory,
+                    onProductClick = { product ->
+                        selectedProduct = product
+                    },
                     onRetryClick = catalogViewModel::loadCatalog
                 )
             }
@@ -65,6 +82,19 @@ fun StoreApp(
                 )
             }
         }
+    }
+
+    selectedProduct?.let { product ->
+        ProductDetailsBottomSheet(
+            product = product,
+            sheetState = productSheetState,
+            onDismissRequest = {
+                selectedProduct = null
+            },
+            onAddToCartClick = { _, _ ->
+                // Логика добавления в корзину будет реализована в следующих блоках.
+            }
+        )
     }
 }
 
